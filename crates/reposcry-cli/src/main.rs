@@ -106,6 +106,11 @@ enum Commands {
         #[command(subcommand)]
         action: InstallAction,
     },
+    /// xAI Grok Build CLI installer: `reposcry grok install`
+    Grok {
+        #[command(subcommand)]
+        action: InstallAction,
+    },
     /// Local hook installer: `reposcry hooks install`
     Hooks {
         #[command(subcommand)]
@@ -408,6 +413,13 @@ fn main() -> anyhow::Result<()> {
             &reposcry_dir,
             &db_path,
             InstallPlatform::Qoder,
+            action,
+        ),
+        Commands::Grok { action } => cmd_install_action(
+            &repo_root,
+            &reposcry_dir,
+            &db_path,
+            InstallPlatform::Grok,
             action,
         ),
         Commands::Hooks { action } => cmd_install_action(

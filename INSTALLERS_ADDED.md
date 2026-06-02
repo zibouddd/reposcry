@@ -25,6 +25,7 @@ This version adds `reposcry install` commands so AI coding agents can discover a
 | Cursor                | `reposcry cursor install`              |
 | Google Antigravity    | `reposcry antigravity install`         |
 | Qoder IDE/CLI         | `reposcry qoder install`               |
+| xAI Grok Build CLI    | `reposcry grok install`                |
 | Hook scripts only     | `reposcry hooks install`               |
 | Everything            | `reposcry install --platform all`      |
 

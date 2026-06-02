@@ -261,6 +261,7 @@ reposcry install --platform hooks
 | `trae-cn`     | Trae CN instructions                          |
 | `antigravity` | Google Antigravity instructions               |
 | `qoder`       | Qoder IDE/CLI (Alibaba) instructions          |
+| `grok`        | xAI Grok Build CLI / `GROK.md` + `AGENTS.md` + `.grok/` instructions |
 | `hooks`       | Local Git/editor hook scripts only            |
 | `all`         | All supported instruction templates           |
 

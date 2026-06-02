@@ -47,6 +47,8 @@ pub enum InstallPlatform {
     Antigravity,
     /// Qoder IDE/CLI (Alibaba) instructions
     Qoder,
+    /// xAI Grok Build CLI (Grok.md + AGENTS.md + .grok/) instructions
+    Grok,
     /// Local git/editor hook scripts only
     Hooks,
     /// Install all supported instruction templates
@@ -76,6 +78,7 @@ impl InstallPlatform {
             Self::Windsurf => "Windsurf Cascade",
             Self::Antigravity => "Google Antigravity",
             Self::Qoder => "Qoder IDE/CLI",
+            Self::Grok => "xAI Grok Build CLI",
             Self::Hooks => "reposcry hooks",
             Self::All => "all platforms",
         }
@@ -103,6 +106,7 @@ impl InstallPlatform {
             Self::Windsurf => "windsurf",
             Self::Antigravity => "antigravity",
             Self::Qoder => "qoder",
+            Self::Grok => "grok",
             Self::Hooks => "hooks",
             Self::All => "all",
         }
@@ -130,6 +134,7 @@ impl InstallPlatform {
             InstallPlatform::Windsurf,
             InstallPlatform::Antigravity,
             InstallPlatform::Qoder,
+            InstallPlatform::Grok,
             InstallPlatform::Hooks,
         ]
     }
@@ -233,6 +238,7 @@ pub fn install_platform(
         InstallPlatform::Pi => install_agent_directory(repo_root, platform, ".pi/reposcry.md", options, &mut summary)?,
         InstallPlatform::Antigravity => install_agent_directory(repo_root, platform, ".antigravity/instructions/reposcry.md", options, &mut summary)?,
         InstallPlatform::Qoder => install_qoder(repo_root, options, &mut summary)?,
+        InstallPlatform::Grok => install_grok(repo_root, options, &mut summary)?,
         InstallPlatform::All => unreachable!(),
     }
 
@@ -319,6 +325,15 @@ fn install_qoder(repo_root: &Path, options: InstallOptions, summary: &mut Instal
     write_file(repo_root, ".qoder/commands/reposcry-update.md", &qoder_command("update"), options, summary)?;
     write_file(repo_root, ".qoder/commands/reposcry-validate.md", &qoder_command("validate"), options, summary)?;
     install_agents_md(repo_root, InstallPlatform::Qoder, options, summary)
+}
+
+fn install_grok(repo_root: &Path, options: InstallOptions, summary: &mut InstallSummary) -> Result<()> {
+    upsert_marked_block(repo_root, "GROK.md", "grok", &core_agent_instructions(InstallPlatform::Grok), options, summary)?;
+    write_file(repo_root, ".grok/reposcry.md", &core_agent_instructions(InstallPlatform::Grok), options, summary)?;
+    write_file(repo_root, ".grok/commands/reposcry-context.md", &qoder_command("context"), options, summary)?;
+    write_file(repo_root, ".grok/commands/reposcry-update.md", &qoder_command("update"), options, summary)?;
+    write_file(repo_root, ".grok/commands/reposcry-validate.md", &qoder_command("validate"), options, summary)?;
+    install_agents_md(repo_root, InstallPlatform::Grok, options, summary)
 }
 
 fn install_agent_directory(repo_root: &Path, platform: InstallPlatform, path: &str, options: InstallOptions, summary: &mut InstallSummary) -> Result<()> {
