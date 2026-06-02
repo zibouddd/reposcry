@@ -101,6 +101,11 @@ enum Commands {
         #[command(subcommand)]
         action: InstallAction,
     },
+    /// Qoder IDE/CLI installer: `reposcry qoder install`
+    Qoder {
+        #[command(subcommand)]
+        action: InstallAction,
+    },
     /// Local hook installer: `reposcry hooks install`
     Hooks {
         #[command(subcommand)]
@@ -396,6 +401,13 @@ fn main() -> anyhow::Result<()> {
             &reposcry_dir,
             &db_path,
             InstallPlatform::Antigravity,
+            action,
+        ),
+        Commands::Qoder { action } => cmd_install_action(
+            &repo_root,
+            &reposcry_dir,
+            &db_path,
+            InstallPlatform::Qoder,
             action,
         ),
         Commands::Hooks { action } => cmd_install_action(

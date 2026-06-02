@@ -45,6 +45,8 @@ pub enum InstallPlatform {
     Windsurf,
     /// Google Antigravity instructions
     Antigravity,
+    /// Qoder IDE/CLI (Alibaba) instructions
+    Qoder,
     /// Local git/editor hook scripts only
     Hooks,
     /// Install all supported instruction templates
@@ -73,6 +75,7 @@ impl InstallPlatform {
             Self::Cursor => "Cursor",
             Self::Windsurf => "Windsurf Cascade",
             Self::Antigravity => "Google Antigravity",
+            Self::Qoder => "Qoder IDE/CLI",
             Self::Hooks => "reposcry hooks",
             Self::All => "all platforms",
         }
@@ -99,6 +102,7 @@ impl InstallPlatform {
             Self::Cursor => "cursor",
             Self::Windsurf => "windsurf",
             Self::Antigravity => "antigravity",
+            Self::Qoder => "qoder",
             Self::Hooks => "hooks",
             Self::All => "all",
         }
@@ -125,6 +129,7 @@ impl InstallPlatform {
             InstallPlatform::Cursor,
             InstallPlatform::Windsurf,
             InstallPlatform::Antigravity,
+            InstallPlatform::Qoder,
             InstallPlatform::Hooks,
         ]
     }
@@ -227,6 +232,7 @@ pub fn install_platform(
         InstallPlatform::Kimi => install_agent_directory(repo_root, platform, ".kimi/reposcry.md", options, &mut summary)?,
         InstallPlatform::Pi => install_agent_directory(repo_root, platform, ".pi/reposcry.md", options, &mut summary)?,
         InstallPlatform::Antigravity => install_agent_directory(repo_root, platform, ".antigravity/instructions/reposcry.md", options, &mut summary)?,
+        InstallPlatform::Qoder => install_qoder(repo_root, options, &mut summary)?,
         InstallPlatform::All => unreachable!(),
     }
 
@@ -305,6 +311,14 @@ fn install_windsurf(repo_root: &Path, options: InstallOptions, summary: &mut Ins
     write_file(repo_root, ".windsurfrules", &windsurf_rule(), options, summary)?;
     write_file(repo_root, ".windsurf/rules/reposcry.md", &core_agent_instructions(InstallPlatform::Windsurf), options, summary)?;
     install_agents_md(repo_root, InstallPlatform::Windsurf, options, summary)
+}
+
+fn install_qoder(repo_root: &Path, options: InstallOptions, summary: &mut InstallSummary) -> Result<()> {
+    write_file(repo_root, ".qoder/rules/reposcry.md", &core_agent_instructions(InstallPlatform::Qoder), options, summary)?;
+    write_file(repo_root, ".qoder/commands/reposcry-context.md", &qoder_command("context"), options, summary)?;
+    write_file(repo_root, ".qoder/commands/reposcry-update.md", &qoder_command("update"), options, summary)?;
+    write_file(repo_root, ".qoder/commands/reposcry-validate.md", &qoder_command("validate"), options, summary)?;
+    install_agents_md(repo_root, InstallPlatform::Qoder, options, summary)
 }
 
 fn install_agent_directory(repo_root: &Path, platform: InstallPlatform, path: &str, options: InstallOptions, summary: &mut InstallSummary) -> Result<()> {
@@ -738,6 +752,39 @@ Run:
 ```
 
 Fix or report dependency cycles, architecture violations, high-risk files, or missing tests."#,
+        _ => r#"Validate the current branch using RepoScry.
+
+Run:
+
+```bash
+./scripts/reposcry-validate.sh main
+```
+
+Fix or report dependency cycles, architecture violations, high-risk files, or missing tests."#,
+    };
+    body.to_string()
+}
+
+fn qoder_command(kind: &str) -> String {
+    let body = match kind {
+        "context" => r#"Generate a RepoScry context pack for the task in $ARGUMENTS.
+
+Run:
+
+```bash
+./scripts/reposcry-context.sh $ARGUMENTS
+```
+
+Then read `.reposcry/AI_CONTEXT.md` before editing."#,
+        "update" => r#"Update the RepoScry graph after an edit batch.
+
+Run:
+
+```bash
+./scripts/reposcry-update.sh main
+```
+
+Replace `main` with the correct base branch when needed."#,
         _ => r#"Validate the current branch using RepoScry.
 
 Run:

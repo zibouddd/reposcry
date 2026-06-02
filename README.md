@@ -260,6 +260,7 @@ reposcry install --platform hooks
 | `trae`        | Trae instructions                             |
 | `trae-cn`     | Trae CN instructions                          |
 | `antigravity` | Google Antigravity instructions               |
+| `qoder`       | Qoder IDE/CLI (Alibaba) instructions          |
 | `hooks`       | Local Git/editor hook scripts only            |
 | `all`         | All supported instruction templates           |
 
